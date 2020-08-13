@@ -1,0 +1,36 @@
+Arguments: 
+  /home/almeida/.nvm/versions/node/v12.16.2/bin/node /usr/share/yarn/bin/yarn.js add puppteer
+
+PATH: 
+  /home/almeida/.nvm/versions/node/v12.16.2/bin:/home/almeida/.zinit/polaris/bin:/home/almeida/.poetry/bin:/home/almeida/.local/bin:/home/almeida/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/almeida/.dotnet/tools:/opt/mssql-tools/bin:/home/almeida/Android/Sdk/emulator:/home/almeida/Android/Sdk/tools:/home/almeida/Android/Sdk/tools/bin:/home/almeida/Android/Sdk/platform-tools:/home/almeida/android-studio/bin:/opt/mssql-tools/bin:/home/almeida/Android/Sdk/emulator:/home/almeida/Android/Sdk/tools:/home/almeida/Android/Sdk/tools/bin:/home/almeida/Android/Sdk/platform-tools:/home/almeida/android-studio/bin
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  12.16.2
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/puppteer: Not found
+      at Request.params.callback [as _callback] (/usr/share/yarn/lib/cli.js:66987:18)
+      at Request.self.callback (/usr/share/yarn/lib/cli.js:140748:22)
+      at Request.emit (events.js:310:20)
+      at Request.<anonymous> (/usr/share/yarn/lib/cli.js:141720:10)
+      at Request.emit (events.js:310:20)
+      at IncomingMessage.<anonymous> (/usr/share/yarn/lib/cli.js:141642:12)
+      at Object.onceWrapper (events.js:416:28)
+      at IncomingMessage.emit (events.js:322:22)
+      at endReadableNT (_stream_readable.js:1187:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
