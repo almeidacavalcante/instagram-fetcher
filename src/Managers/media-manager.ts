@@ -3,6 +3,7 @@ require('isomorphic-fetch');
 import https from 'https';
 import fs from 'fs';
 import Unsplash, { toJson } from "unsplash-js"; 
+import Clipper from 'image-clipper';
 
 class MediaManager {
   unsplash?: Unsplash;
@@ -14,6 +15,23 @@ class MediaManager {
         secret: process.env.UNSPLASH_SECRET_KEY,
       });
     }
+  }
+
+  downloadRandomPhotoByQuery = async (query: string): Promise<string> => {
+    return new Promise( async (res, rej) => {
+      try {
+        this.unsplash?.photos.getRandomPhoto({query}).then(toJson).then( async ({urls}) => {
+          console.log(urls);
+          const filename = `chama.jpg`;
+          await this.saveImageToDisk(urls.regular, filename);
+          res(`./resized.jpg`);
+        })
+        
+      } catch (err) {
+        console.log('********** ERROR *****');
+        throw new err;
+      }
+    })
   }
 
   async listPhotos() {
@@ -38,6 +56,13 @@ class MediaManager {
 
   async saveImageToDisk(url:string, localPath:string) {
     const file = fs.createWriteStream(localPath);
+    Clipper(localPath, () => {
+      Clipper.crop(20, 20, 100, 100)
+      .quality(100)
+      .toFile('resized.jpg', () => {
+        console.log('saved!');
+      });
+    });
     const request = https.get(url, async response => {
       await response.pipe(file);
     });

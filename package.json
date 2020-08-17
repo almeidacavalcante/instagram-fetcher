@@ -12,6 +12,7 @@
     "es6-promise": "^4.2.8",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "image-clipper": "^0.4.4",
     "instagram-private-api": "^1.41.0",
     "isomorphic-fetch": "^2.2.1",
     "puppeteer": "^5.2.1",

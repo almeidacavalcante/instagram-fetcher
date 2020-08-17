@@ -1,7 +1,5 @@
 import { IgApiClient } from 'instagram-private-api';
-import { readFile } from 'fs';
-import { promisify } from 'util';
-const readFileAsync = promisify(readFile);
+import { readFileSync } from 'fs';
 
 class InstagramManager {
   instagramApi: IgApiClient;
@@ -10,15 +8,14 @@ class InstagramManager {
     this.instagramApi = new IgApiClient();
   }
 
-  async login() {
+  login = async () => {
     if (process.env.USERNAME && process.env.PASSWORD) {
-      this.instagramApi.state.generateDevice(process.env.USERNAME);
+      await this.instagramApi.state.generateDevice(process.env.USERNAME);
       await this.instagramApi.account.login(process.env.USERNAME, process.env.PASSWORD);
     }
   }
 
-  async postPicture(caption: string, location?: string) {
-    const path = './mkb.jpg';
+  postPicture = async (caption: string, path: string, location: string = '') => {
     const { latitude, longitude, searchQuery } = {
       latitude: 0.0,
       longitude: 0.0,
@@ -28,19 +25,26 @@ class InstagramManager {
     const locations = await this.instagramApi.search.location(latitude, longitude, searchQuery);
     const mediaLocation = locations[0];
     console.log(mediaLocation);
-  
-    const publishResult = await this.instagramApi.publish.photo({
-      file: await readFileAsync(path),
-      caption: caption,
-      location: mediaLocation,
-      usertags: {
-        in: [
-          await this.generateUsertagFromName('instagram', 0.5, 0.5),
-        ],
-      },
-    });
-  
-    console.log(publishResult);
+    
+    try {
+      const file = readFileSync(path);
+      console.log(file);
+      console.log(path);
+      console.log(__dirname);
+      
+      
+      
+      const publishResult = await this.instagramApi.publish.photo({
+        file,
+        caption: caption,
+        location: mediaLocation,
+      });
+    
+      console.log(publishResult);
+    } catch (err) {
+      console.log('************', err);
+      
+    }
   };
 
   async generateUsertagFromName(name: string, x: number, y: number): Promise<{ user_id: number, position: [number, number] }> {
