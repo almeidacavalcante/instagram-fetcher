@@ -3,7 +3,7 @@ require('isomorphic-fetch');
 import https from 'https';
 import fs from 'fs';
 import Unsplash, { toJson } from "unsplash-js"; 
-import Clipper from 'image-clipper';
+var Jimp = require('jimp');
 
 class MediaManager {
   unsplash?: Unsplash;
@@ -22,13 +22,13 @@ class MediaManager {
       try {
         this.unsplash?.photos.getRandomPhoto({query}).then(toJson).then( async ({urls}) => {
           console.log(urls);
-          const filename = `chama.jpg`;
+          const filename = `image-${Date.now()}.jpg`;
           await this.saveImageToDisk(urls.regular, filename);
-          res(`./resized.jpg`);
+          res(filename);
         })
         
       } catch (err) {
-        console.log('********** ERROR *****');
+        console.log('***** ERROR *****');
         throw new err;
       }
     })
@@ -47,25 +47,38 @@ class MediaManager {
       .then( async json => {
           const results = json.results;
           for (const result of results) {
-            const { regular } = result.urls;
-            await this.saveImageToDisk(regular, `${tag}-${Date.now()}.jpg`)
+            const { raw } = result.urls;
+            await this.saveImageToDisk(raw, `${tag}-${Date.now()}.jpg`)
           }
       });
     }
   }
 
-  async saveImageToDisk(url:string, localPath:string) {
-    const file = fs.createWriteStream(localPath);
-    Clipper(localPath, () => {
-      Clipper.crop(20, 20, 100, 100)
-      .quality(100)
-      .toFile('resized.jpg', () => {
-        console.log('saved!');
+  async saveImageToDisk(url:string, filename:string) {
+    return new Promise<string>( async (res, rej) => {
+      const file = await fs.createWriteStream(filename);
+      https.get(url, async response => {
+        await response.pipe(file);
       });
-    });
-    const request = https.get(url, async response => {
-      await response.pipe(file);
-    });
+
+      setTimeout(() => {
+        Jimp.read(filename)
+        .then((image: any) => {
+          const resizedFilename = 'resized_'+filename;
+          image
+            .quality(100)
+            .crop(0,0,700,700)
+            .write(resizedFilename);
+  
+          res(filename);
+        })
+        .catch((err: Error) => {
+          console.error(err);
+          rej(err);
+        });
+      }, 4000);
+
+    })
   }
 }
 

@@ -35,14 +35,15 @@ class MainManager {
   };
 
   async postRandomPhoto(query: string) {
-    const filePath = await this.mediaManager.downloadRandomPhotoByQuery(query);
-    console.log("after get file", filePath);
-    if (filePath) {
+    const filename = await this.mediaManager.downloadRandomPhotoByQuery(query);
+    console.log("after get file", filename);
+    if (filename) {
       await this.instagramManager.postPicture(
         "#keyboardist #keyboards #keyboardplayer #keyboardprotector #keyboardandmouse #keyboardgaming #keyboardcover #keyboardwarrior #keyboardcat #keyboardmurah #keyboarder #keyboardsolo #keyboardwarriors #keyboardistindonesia #keyboarding #keyboardlaptop #keyboardplayers #keyboardis #keyboardyamaha",
-        filePath
+        filename
       );
-      // await fs.unlink(filePath, () => {});
+      await fs.unlink(filename, () => {});
+      await fs.unlink(`resized_${filename}`, () => {});
     }
   }
 

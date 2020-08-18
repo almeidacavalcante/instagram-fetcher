@@ -32,8 +32,6 @@ class InstagramManager {
       console.log(path);
       console.log(__dirname);
       
-      
-      
       const publishResult = await this.instagramApi.publish.photo({
         file,
         caption: caption,
